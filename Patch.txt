@@ -1,0 +1,10 @@
+to resize image with style define itself
+comment line 82 to 87 in HTMLImage.js
+
+to change image component to MyImage in HTMLImage.js
+add import MyImage from '../../../src/utils/MyImage'; in line 4
+and change Image tag to MyImage in line 108
+
+to better quality in big image change line 30 & 31 in HTMLImage.js to
+width: 300,
+height: 300
