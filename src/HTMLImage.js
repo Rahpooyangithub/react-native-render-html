@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react';
 import { Image, View, Text } from 'react-native';
 import PropTypes from 'prop-types';
+import MyImage from '../../../src/utils/MyImage';
 
 export default class HTMLImage extends PureComponent {
     constructor (props) {
@@ -26,8 +27,8 @@ export default class HTMLImage extends PureComponent {
 
     static defaultProps = {
         imagesInitialDimensions: {
-            width: 100,
-            height: 100
+            width: 300,
+            height: 300
         }
     }
 
@@ -104,7 +105,7 @@ export default class HTMLImage extends PureComponent {
 
     validImage (source, style, props = {}) {
         return (
-            <Image
+            <MyImage
               source={source}
               style={[style, { width: this.state.width, height: this.state.height, resizeMode: 'cover' }]}
               {...props}
