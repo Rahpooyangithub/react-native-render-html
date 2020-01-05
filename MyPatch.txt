@@ -1,10 +1,30 @@
-to resize image with style define itself
+to resize image with style define itself:
 comment line 82 to 87 in HTMLImage.js
 
-to change image component to MyImage in HTMLImage.js
-add import MyImage from '../../../src/utils/MyImage'; in line 4
-and change Image tag to MyImage in line 108
+to add loading image in HTMLImage.js:
+add ActivityIndicator in line 2
+add loaded: false to state
+replace this codes with Image tag in line 108:
+< View >
+    {
+        this.state.loaded ?
+            <View />
+            :
+            <View
+                style={{ width: 20, height: 20, justifyContent: 'center', alignItems: 'center', position: 'absolute', zIndex: 10 }}
+            >
+                <ActivityIndicator size="small" color="#ccc" />
+            </View>
+    }
+    <Image
+        source={source}
+        onLoadStart={() => { this.setState({ loaded: false })}}
+        onLoadEnd={() => { this.setState({ loaded: true })}}
+        style={[style, { width: this.state.width, height: this.state.height, resizeMode: 'cover' }]}
+        {...props}
+    />
+</View >
 
-to better quality in big image change line 30 & 31 in HTMLImage.js to
-width: 300,
-height: 300
+to better experience when loading change line 30 & 31 in HTMLImage.js to
+width: 10,
+height: 10
