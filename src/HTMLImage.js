@@ -1,14 +1,14 @@
 import React, { PureComponent } from 'react';
-import { Image, View, Text } from 'react-native';
+import { Image, View, Text, ActivityIndicator } from 'react-native';
 import PropTypes from 'prop-types';
-import MyImage from '../../../src/utils/MyImage';
 
 export default class HTMLImage extends PureComponent {
-    constructor (props) {
+    constructor(props) {
         super(props);
         this.state = {
             width: props.imagesInitialDimensions.width,
-            height: props.imagesInitialDimensions.height
+            height: props.imagesInitialDimensions.height,
+            loaded: false
         };
     }
 
@@ -27,25 +27,25 @@ export default class HTMLImage extends PureComponent {
 
     static defaultProps = {
         imagesInitialDimensions: {
-            width: 300,
-            height: 300
+            width: 10,
+            height: 10
         }
     }
 
-    componentDidMount () {
+    componentDidMount() {
         this.getImageSize();
         this.mounted = true;
     }
 
-    componentWillUnmount () {
+    componentWillUnmount() {
         this.mounted = false;
     }
 
-    componentWillReceiveProps (nextProps) {
+    componentWillReceiveProps(nextProps) {
         this.getImageSize(nextProps);
     }
 
-    getDimensionsFromStyle (style, height, width) {
+    getDimensionsFromStyle(style, height, width) {
         let styleWidth;
         let styleHeight;
 
@@ -76,16 +76,16 @@ export default class HTMLImage extends PureComponent {
         return { styleWidth, styleHeight };
     }
 
-    getImageSize (props = this.props) {
+    getImageSize(props = this.props) {
         const { source, imagesMaxWidth, style, height, width } = props;
         const { styleWidth, styleHeight } = this.getDimensionsFromStyle(style, height, width);
 
-//         if (styleWidth && styleHeight) {
-//             return this.mounted && this.setState({
-//                 width: typeof styleWidth === 'string' && styleWidth.search('%') !== -1 ? styleWidth : parseInt(styleWidth, 10),
-//                 height: typeof styleHeight === 'string' && styleHeight.search('%') !== -1 ? styleHeight : parseInt(styleHeight, 10)
-//             });
-//         }
+        // if (styleWidth && styleHeight) {
+        //     return this.mounted && this.setState({
+        //         width: typeof styleWidth === 'string' && styleWidth.search('%') !== -1 ? styleWidth : parseInt(styleWidth, 10),
+        //         height: typeof styleHeight === 'string' && styleHeight.search('%') !== -1 ? styleHeight : parseInt(styleHeight, 10)
+        //     });
+        // }
         // Fetch image dimensions only if they aren't supplied or if with or height is missing
         Image.getSize(
             source.uri,
@@ -103,25 +103,39 @@ export default class HTMLImage extends PureComponent {
         );
     }
 
-    validImage (source, style, props = {}) {
+    validImage(source, style, props = {}) {
         return (
-            <MyImage
-              source={source}
-              style={[style, { width: this.state.width, height: this.state.height, resizeMode: 'cover' }]}
-              {...props}
-            />
+            < View >
+                {
+                    this.state.loaded ?
+                        <View />
+                        :
+                        <View
+                            style={{ width: 20, height: 20, justifyContent: 'center', alignItems: 'center', position: 'absolute', zIndex: 10 }}
+                        >
+                            <ActivityIndicator size="small" color="#ccc" />
+                        </View>
+                }
+                <Image
+                    source={source}
+                    onLoadStart={() => { this.setState({ loaded: false })}}
+                    onLoadEnd={() => { this.setState({ loaded: true })}}
+                    style={[style, { width: this.state.width, height: this.state.height, resizeMode: 'cover' }]}
+                    {...props}
+                />
+            </View >
         );
     }
 
-    get errorImage () {
+    get errorImage() {
         return (
             <View style={{ width: 50, height: 50, borderWidth: 1, borderColor: 'lightgray', overflow: 'hidden', justifyContent: 'center' }}>
-                { this.props.alt ? <Text style={{ textAlign: 'center', fontStyle: 'italic' }}>{ this.props.alt }</Text> : false }
+                {this.props.alt ? <Text style={{ textAlign: 'center', fontStyle: 'italic' }}>{this.props.alt}</Text> : false}
             </View>
         );
     }
 
-    render () {
+    render() {
         const { source, style, passProps } = this.props;
 
         return !this.state.error ? this.validImage(source, style, passProps) : this.errorImage;
