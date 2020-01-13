@@ -1,5 +1,19 @@
+to get OnError Event:
+add in line 16:
+onError: PropTypes.func,
+add in line 102: 
+this.props.onError();
+
+to better experience when loading change line 31 & 32 in HTMLImage.js to
+width: 10,
+height: 10
+
+change sort of lines 37 & 38
+this.mounted = true;
+this.getImageSize();
+
 to resize image with style define itself:
-comment line 82 to 87 in HTMLImage.js
+comment line 84 to 89 in HTMLImage.js
 
 to add loading image in HTMLImage.js:
 add ActivityIndicator in line 2
@@ -24,7 +38,3 @@ replace this codes with Image tag in line 108:
         {...props}
     />
 </View >
-
-to better experience when loading change line 30 & 31 in HTMLImage.js to
-width: 10,
-height: 10
