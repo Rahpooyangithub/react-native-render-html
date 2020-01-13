@@ -13,6 +13,7 @@ export default class HTMLImage extends PureComponent {
     }
 
     static propTypes = {
+        onError: PropTypes.func,
         source: PropTypes.object.isRequired,
         alt: PropTypes.string,
         height: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
@@ -33,8 +34,8 @@ export default class HTMLImage extends PureComponent {
     }
 
     componentDidMount() {
-        this.getImageSize();
         this.mounted = true;
+        this.getImageSize();
     }
 
     componentWillUnmount() {
@@ -98,6 +99,7 @@ export default class HTMLImage extends PureComponent {
                 this.mounted && this.setState({ width: optimalWidth, height: optimalHeight, error: false });
             },
             () => {
+                this.props.onError();
                 this.mounted && this.setState({ error: true });
             }
         );
@@ -123,7 +125,7 @@ export default class HTMLImage extends PureComponent {
                     style={[style, { width: this.state.width, height: this.state.height, resizeMode: 'cover' }]}
                     {...props}
                 />
-            </View >
+              </View >
         );
     }
 
