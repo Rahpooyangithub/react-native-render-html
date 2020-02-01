@@ -38,3 +38,18 @@ replace this codes with Image tag in line 108:
         {...props}
     />
 </View >
+
+for RTL Style in Text when bullet points exist:
+
+use RTL props in HTML tag and change line 101 of HtmlRenderers to this:
+
+passProps.RTL ?
+    <View key={`list-${nodeIndex}-${index}-${key}`} style={{ flexDirection: 'row', marginBottom: 10 }}>
+        <View style={{ flex: 1, marginRight: 5 }}>{child}</View>
+        {prefix}
+    </View>
+    :
+    <View key={`list-${nodeIndex}-${index}-${key}`} style={{ flexDirection: 'row', marginBottom: 10 }}>
+        {prefix}
+        <View style={{ flex: 1 }}>{child}</View>
+    </View>
